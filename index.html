@@ -1,76 +1,90 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>PixelGotchi</title>
-
-  <!-- Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b1220">
-
-  <!-- iOS PWA -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PixelGotchi">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bất ngờ cho Em</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      border: none;
+      border-radius: 12px;
+      background: #ff4b5c;
+      color: white;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    #card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ff4b5c;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.7s ease;
+      z-index: 3;
+    }
+    #card.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .flower {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: url('https://cdn-icons-png.flaticon.com/512/616/616408.png') no-repeat center/cover;
+      animation: fall 6s linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">PIXELGOTCHI</div>
-      <div class="clock" id="clock">00:00</div>
-    </header>
+  <button id="btn">💖 Ấn vào đây 💖</button>
+  <div id="card">Anh Yêu Em! 💕</div>
 
-    <main class="screen-wrap">
-      <div class="screen" id="screen">
-        <canvas id="lcd" width="32" height="32" aria-label="pixel screen"></canvas>
-      </div>
-
-      <section class="stats">
-        <div class="meter"><span>Đói</span><div class="bar"><div id="bar-hunger"></div></div></div>
-        <div class="meter"><span>Vui</span><div class="bar"><div id="bar-happy"></div></div></div>
-        <div class="meter"><span>Sạch</span><div class="bar"><div id="bar-clean"></div></div></div>
-        <div class="meter"><span>Sức khoẻ</span><div class="bar"><div id="bar-health"></div></div></div>
-        <div class="meter"><span>Năng lượng</span><div class="bar"><div id="bar-energy"></div></div></div>
-      </section>
-
-      <section class="actions">
-        <button class="btn" id="btn-feed">🍗</button>
-        <button class="btn warn" id="btn-clean">🧻</button>
-        <button class="btn med" id="btn-med">💉</button>
-        <button class="btn" id="btn-lights">💡</button>
-        <button class="btn" id="btn-sleep">😴</button>
-        <button class="btn" id="btn-play">🎮</button>
-      </section>
-
-      <section class="meta">
-        <div class="row">
-          <div>Giai đoạn: <b id="stage">Trứng</b></div>
-          <div class="small">Tuổi: <span id="age">0</span>d</div>
-        </div>
-        <div class="row between">
-          <div class="small">💩 <span id="poops">0</span></div>
-          <button class="reset" id="btn-reset">Reset</button>
-        </div>
-      </section>
-    </main>
-
-    <footer class="hint small">
-      Thêm vào Màn hình chính để chơi như app • Lưu tự động • Hỗ trợ offline
-    </footer>
-  </div>
   <script>
-    // Register service worker for PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-      });
+    const btn = document.getElementById('btn');
+    const card = document.getElementById('card');
+    let started = false;
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      card.classList.add('show');
+      started = true;
+      createFlowers();
+      setInterval(createFlowers, 500);
+    });
+
+    function createFlowers() {
+      if (!started) return;
+      const flower = document.createElement('div');
+      flower.className = 'flower';
+      flower.style.left = Math.random() * window.innerWidth + 'px';
+      flower.style.animationDuration = 4 + Math.random() * 4 + 's';
+      document.body.appendChild(flower);
+      setTimeout(() => flower.remove(), 8000);
     }
   </script>
-  <script src="app.js"></script>
 </body>
 </html>
